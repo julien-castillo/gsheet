@@ -99,7 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     // }
                     // ];
                     // await insertDataIntoSheet(userDetailsList);
-                    await updateDataFromSheet();
+                    // await updateDataFromSheet();
+                    await deleteDataFromSheet();
                     await readDataFromSheet();
                     setState(() {});
                   },
