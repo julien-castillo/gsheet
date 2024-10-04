@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gsheet/gsheet_crud.dart';
 import 'package:gsheet/gsheet_setup.dart';
@@ -7,15 +6,12 @@ import 'package:gsheet/gsheet_setup.dart';
 Future main() async {
 WidgetsFlutterBinding.ensureInitialized();
 await GsheetInit();
-
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,21 +38,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final inputText = TextEditingController();
-  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
-  Random _rnd = Random();
+  final Random _rnd = Random();
   String ? ID;
 
   uniqueIdGenerator () async {
-    Random random = await new Random();
-    int randomNumber = await random.nextInt(1000000);
+    Random random = Random();
+    int randomNumber = random.nextInt(1000000);
 
     String getRandomString(int length) => 
     String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))
     )
     );
-    ID = await '${randomNumber}${getRandomString(10)}';
+    ID = '$randomNumber${getRandomString(10)}';
   }
 
 
@@ -102,10 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   List<Map<String, dynamic>> userDetailsList = [
                     {
                       'id': '$ID',
+                      // ignore_for_file: unnecessary_null_comparison
                       'name': inputText == null ? '' : inputText.text
                     }
                   ];
                   await insertDataIntoSheet(userDetailsList);
+                  await readDataFromSheet();
+                  setState(() {
+                    
+                  });
                 }, 
                 child: const Text(
                   'Save',
@@ -113,8 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
                 ),
               ),
-
-
+              ListView.builder(
+                itemCount: dataFromSheet.length,
+                controller: ScrollController(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Text(
+                      dataFromSheet[index]['name'],
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  );
+                }
+                ),
           ],
         ),
       ),
