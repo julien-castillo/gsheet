@@ -4,8 +4,8 @@ import 'package:gsheet/gsheet_crud.dart';
 import 'package:gsheet/gsheet_setup.dart';
 
 Future main() async {
-WidgetsFlutterBinding.ensureInitialized();
-await GsheetInit();
+  WidgetsFlutterBinding.ensureInitialized();
+  await gSheetInit();
   runApp(const MyApp());
 }
 
@@ -36,25 +36,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final inputText = TextEditingController();
-  final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
   final Random _rnd = Random();
-  String ? ID;
+  String? ID;
 
-  uniqueIdGenerator () async {
+  uniqueIdGenerator() async {
     Random random = Random();
     int randomNumber = random.nextInt(1000000);
 
-    String getRandomString(int length) => 
-    String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))
-    )
-    );
+    String getRandomString(int length) =>
+        String.fromCharCodes(Iterable.generate(
+            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
     ID = '$randomNumber${getRandomString(10)}';
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,47 +71,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: inputText,
                 onChanged: (value) {},
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffe4e4e4),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xffe4e4e4),
+                      ),
                     ),
-                  ),
-                  contentPadding: EdgeInsets.only(top: 10, left: 5),
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 11,
-                    color: Color(0xffb2b2b2),
-                  ),
-                  fillColor: Colors.white,
-                  filled: true
-                ),
+                    contentPadding: EdgeInsets.only(top: 10, left: 5),
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 11,
+                      color: Color(0xffb2b2b2),
+                    ),
+                    fillColor: Colors.white,
+                    filled: true),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: TextButton(
-                onPressed: () async {
-                  await uniqueIdGenerator();
-                  List<Map<String, dynamic>> userDetailsList = [
-                    {
-                      'id': '$ID',
-                      // ignore_for_file: unnecessary_null_comparison
-                      'name': inputText == null ? '' : inputText.text
-                    }
-                  ];
-                  await insertDataIntoSheet(userDetailsList);
-                  await readDataFromSheet();
-                  setState(() {
-                    
-                  });
-                }, 
-                child: const Text(
-                  'Save',
-                  style: TextStyle(fontSize: 20),
-                )
-                ),
-              ),
-              ListView.builder(
+                  onPressed: () async {
+                    // await uniqueIdGenerator();
+                    // List<Map<String, dynamic>> userDetailsList = [
+                    // {
+                    //   'id': '$ID',
+                    //   // ignore_for_file: unnecessary_null_comparison
+                    //   'name': inputText == null ? '' : inputText.text
+                    // }
+                    // ];
+                    // await insertDataIntoSheet(userDetailsList);
+                    await updateDataFromSheet();
+                    await readDataFromSheet();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(fontSize: 20),
+                  )),
+            ),
+            ListView.builder(
                 itemCount: dataFromSheet.length,
                 controller: ScrollController(),
                 shrinkWrap: true,
@@ -125,8 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: const TextStyle(fontSize: 20),
                     ),
                   );
-                }
-                ),
+                }),
           ],
         ),
       ),
