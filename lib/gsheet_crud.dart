@@ -14,6 +14,12 @@ readDataFromSheet() async {
 
 updateDataFromSheet() async {
   await gsheetCrudUserDetails!.values.map
-      .insertRowByKey('621007ydE1HiSj91', {'name': 'updated New New Name'});
+      .insertRowByKey('', {'name': 'updated New New Name'}); // ID
   print('===> Data Updated ! <===');
+}
+
+deleteDataFromSheet() async {
+  final index = await gsheetCrudUserDetails!.values.rowIndexOf(''); // ID
+  await gsheetCrudUserDetails!.deleteRow(index);
+  print('===> Row Deleted ! <===');
 }
