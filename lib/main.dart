@@ -38,21 +38,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final inputText = TextEditingController();
-  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 
-  Random _rnd = Random();
+  final Random _rnd = Random();
   String ? ID;
 
   uniqueIdGenerator () async {
-    Random random = await new Random();
-    int randomNumber = await random.nextInt(1000000);
+    Random random = Random();
+    int randomNumber = random.nextInt(1000000);
 
     String getRandomString(int length) => 
     String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))
     )
     );
-    ID = await '${randomNumber}${getRandomString(10)}';
+    ID = '$randomNumber${getRandomString(10)}';
   }
 
 
@@ -98,8 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   List<Map<String, dynamic>> userDetailsList = [
                     {
                       'id': '$ID',
-                      // 'name': inputText == null ? '' : inputText.text
-                      'name': inputText.text,
+                      // ignore_for_file: unnecessary_null_comparison
+                      'name': inputText == null ? '' : inputText.text
                     }
                   ];
                   await insertDataIntoSheet(userDetailsList);
