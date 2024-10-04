@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gsheet/gsheet_crud.dart';
 import 'package:gsheet/gsheet_setup.dart';
@@ -7,15 +6,12 @@ import 'package:gsheet/gsheet_setup.dart';
 Future main() async {
 WidgetsFlutterBinding.ensureInitialized();
 await GsheetInit();
-
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,10 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   List<Map<String, dynamic>> userDetailsList = [
                     {
                       'id': '$ID',
-                      'name': inputText == null ? '' : inputText.text
+                      // 'name': inputText == null ? '' : inputText.text
+                      'name': inputText.text,
                     }
                   ];
                   await insertDataIntoSheet(userDetailsList);
+                  await readDataFromSheet();
+                  setState(() {
+                    
+                  });
                 }, 
                 child: const Text(
                   'Save',
@@ -113,8 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
                 ),
               ),
-
-
+              ListView.builder(
+                itemCount: dataFromSheet.length,
+                controller: ScrollController(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Center(
+                    child: Text(
+                      dataFromSheet[index]['name'],
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  );
+                }
+                ),
           ],
         ),
       ),
