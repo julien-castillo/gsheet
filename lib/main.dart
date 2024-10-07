@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gsheet/gsheet_crud.dart';
@@ -53,6 +54,30 @@ class _HomeScreenState extends State<HomeScreen> {
     ID = '$randomNumber${getRandomString(10)}';
   }
 
+
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+    startPolling();
+  }
+
+  void startPolling() {
+    // Timer qui exécute `readDataFromSheet()` toutes les 25 secondes
+    timer = Timer.periodic(const Duration(seconds: 60), (Timer t) async {
+      await readDataFromSheet();
+      setState(() {}); // Mettre à jour l'interface après récupération des données
+    });
+  }
+
+  @override
+  void dispose() {
+    // Annule le timer lorsque le widget est supprimé pour éviter les fuites de mémoire
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +125,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     // ];
                     // await insertDataIntoSheet(userDetailsList);
                     // await updateDataFromSheet();
-                    await deleteDataFromSheet();
+                    // await deleteDataFromSheet();
+                    await readDataFromSheet();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Read',
+                    style: TextStyle(fontSize: 20),
+                  )),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: TextButton(
+                  onPressed: () async {
+                    await uniqueIdGenerator();
+                    List<Map<String, dynamic>> userDetailsList = [
+                    {
+                      'id': '$ID',
+                      // ignore_for_file: unnecessary_null_comparison
+                      'name': inputText == null ? '' : inputText.text
+                    }
+                    ];
+                    await insertDataIntoSheet(userDetailsList);
+                    // await updateDataFromSheet();
+                    // await deleteDataFromSheet();
                     await readDataFromSheet();
                     setState(() {});
                   },
